@@ -1,0 +1,31 @@
+@isTest
+private class FixIvanTest {
+    static testMethod void testEvanChangedToIvan() {
+        Lead lead = new Lead(Firstname = 'Eyevan', Lastname = 'Melnikov', Company = 'Acme');
+        System.debug('Current Lead Name: ' + lead.FirstName + ' ' + lead.LastName);
+        
+        // Insert lead
+        insert lead;
+        
+        // Retrieve new lead
+        lead = [SELECT FirstName, LastName, Company FROM Lead WHERE Id = :lead.Id];
+        System.debug('Name after trigger fired: ' + lead.FirstName + ' ' + lead.LastName);
+        
+        // Test that the trigger correctly updated the first name
+        System.assertEquals('Ivan', lead.FirstName);
+    }
+    
+    static testMethod void testNotEvanDontChangeName() {
+        Lead lead = new Lead(Firstname = 'Bob', LastName= 'Melnikov', Company = 'Acme');
+        System.debug('Current Lead Name: ' + lead.FirstName + ' ' + lead.LastName);
+        
+        insert lead;
+        
+        lead = [SELECT FirstName, LastName, Company FROM Lead WHERE Id = :lead.Id];
+        System.debug('Name after trigger fired: ' + lead.FirstName + ' ' + lead.LastName);
+        
+        // That that trigger didn't update the first name. It didn't have to
+        System.assertNotEquals('Ivan', lead.FirstName);
+        
+    }
+}

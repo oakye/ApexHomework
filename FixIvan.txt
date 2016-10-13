@@ -1,0 +1,10 @@
+trigger FixIvan on Lead (before insert) {   
+    List<Lead> leadsToUpdate = new List<Lead>();
+    
+    for (Lead lead : Trigger.new) {
+        
+        if(lead.firstname == 'Eyevan') {
+            lead.FirstName = 'Ivan';
+        }
+    }
+}
